@@ -1,14 +1,11 @@
-import { Link } from 'react-router-dom';
 import './App.css';
-import MyRouter from './router';
+import NavBar from './components/NavBar';
+import MyRouter from './router/index';
 
 function App() {
   return (
     <div>
-      <Link to="/">Home</Link>
-      <Link to="/">About Us</Link>
-      <Link to="/">Contact Us</Link>
-
+      <NavBar />
       <MyRouter />
     </div>
   );
