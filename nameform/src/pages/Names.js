@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 import axios from 'axios';
 import Loading from '../components/Loading';
@@ -15,6 +15,31 @@ function Names() {
       setLoading(false);
     })
   },[]);
+
+  const deleteName = (e, id) => {
+    e.preventDefault();
+
+    const thisClicked = e.currentTarget;
+    thisClicked.innerText = "Deleting...";
+
+    axios.delete(`http://127.0.0.1:8000/api/names/${id}/delete`)
+    .then(res => {
+      alert(res.data.message);
+      thisClicked.closest("tr").remove();
+      Navigate('/names')
+    })
+    .catch(function (error){
+      if(error.response){
+        if(error.response.status === 404){
+          alert(error.response.data.message);
+          thisClicked.innerText = "Delete";
+        }
+        if(error.response.status === 500){
+          alert(error.response.data)
+        }
+      }
+    })
+  }
 
   if(loading){
     return (
@@ -33,10 +58,10 @@ function Names() {
         <td>{item.address}</td>
         <td>{item.phone}</td>
         <td>
-          <Link to="/" className="btn btn-success">Edit</Link>
+          <Link to={`/names/${item.id}/edit`} className="btn btn-success">Edit</Link>
         </td>
         <td>
-          <button className='btn btn-danger'>Delete</button>
+          <button type='button' onClick={(e) => deleteName(e, item.id)} className='btn btn-danger'>Delete</button>
         </td>
       </tr>
     )
